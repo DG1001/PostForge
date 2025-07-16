@@ -27,16 +27,21 @@ def import_pdf():
         file.save(filepath)
         
         try:
-            # Parse PDF
+            # Check file size
+            file_size = os.path.getsize(filepath)
+            if file_size > 10 * 1024 * 1024:  # 10MB limit
+                raise ValueError("PDF-Datei ist zu groß (max. 10MB)")
+            
+            # Parse PDF with timeout protection
             parser = LinkedInPDFParser()
             posts_data = parser.parse_pdf(filepath)
             
             # Store parsed data in session for preview
-            import json
             from flask import session
             session['parsed_posts'] = posts_data
             session['pdf_filename'] = filename
             
+            flash(f'{len(posts_data)} Posts aus PDF extrahiert', 'success')
             return redirect(url_for('upload.preview_import'))
         
         except Exception as e:

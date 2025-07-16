@@ -9,6 +9,7 @@
 </div>
 
 <form method="POST" action="{{ url_for('upload.confirm_import') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="mb-6">
         <div class="flex justify-between items-center">
             <p class="text-sm text-gray-600">{{ posts_data|length }} Posts erkannt</p>
