@@ -217,6 +217,94 @@ window.copyToClipboard = function(text) {
     });
 };
 
+window.copyPostForLinkedIn = function(postId, text, imageCount) {
+    // Copy text to clipboard
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50';
+        notification.textContent = 'Text in Zwischenablage kopiert!';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+        
+        // If there are images, show the modal
+        if (imageCount > 0) {
+            loadImagesForDownload(postId);
+            // Use a small delay to ensure images are loaded before showing modal
+            setTimeout(() => {
+                const modal = document.getElementById('imageModal');
+                if (modal) {
+                    // Try multiple approaches to show the modal
+                    modal.classList.remove('hidden');
+                    modal.style.display = 'flex';
+                    modal.style.visibility = 'visible';
+                    modal.style.opacity = '1';
+                    modal.style.zIndex = '9999';
+                    modal.style.position = 'fixed';
+                    modal.style.top = '0';
+                    modal.style.left = '0';
+                    modal.style.right = '0';
+                    modal.style.bottom = '0';
+                    
+                }
+            }, 100);
+        }
+    });
+};
+
+window.loadImagesForDownload = function(postId) {
+    fetch(`/posts/${postId}/images`)
+        .then(response => response.json())
+        .then(images => {
+            const container = document.getElementById('imageDownloadList');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            images.forEach((image, index) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'flex items-center justify-between p-3 border border-gray-200 rounded';
+                imageDiv.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="/static/uploads/images/${image.filename}" 
+                             alt="${image.original_filename}" 
+                             class="w-12 h-12 object-cover rounded">
+                        <div>
+                            <p class="font-medium text-gray-900">${image.original_filename}</p>
+                            <p class="text-sm text-gray-500">${formatFileSize(image.file_size)}</p>
+                        </div>
+                    </div>
+                    <a href="/static/uploads/images/${image.filename}" 
+                       download="${image.original_filename}"
+                       class="btn-secondary text-sm">
+                        Herunterladen
+                    </a>
+                `;
+                container.appendChild(imageDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading images:', error);
+        });
+};
+
+window.closeImageModal = function() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none'; // Force hide
+    }
+};
+
+window.formatFileSize = function(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+};
+
 window.confirmDelete = function(message) {
     return confirm(message || 'Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?');
 };

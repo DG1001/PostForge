@@ -8,6 +8,7 @@
     <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="{{ url_for('static', filename='js/alpine-components.js') }}"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-50 font-sans">
@@ -28,6 +29,34 @@
         
         {% block content %}{% endblock %}
     </main>
+    
+    <!-- Global Image Download Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" onclick="closeImageModal()">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Bilder für LinkedIn herunterladen</h3>
+                        <button onclick="closeImageModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">Text wurde in die Zwischenablage kopiert. Laden Sie die Bilder herunter:</p>
+                    
+                    <div id="imageDownloadList" class="space-y-3">
+                        <!-- Images will be loaded here -->
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closeImageModal()" class="btn-secondary">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     {% block scripts %}{% endblock %}
 </body>

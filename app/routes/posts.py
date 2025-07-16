@@ -141,6 +141,23 @@ def preview(id):
     post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
     return render_template('posts/preview.html', post=post)
 
+@posts_bp.route('/<int:id>/images')
+@login_required
+def get_post_images(id):
+    post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
+    
+    images_data = []
+    for image in post.images:
+        images_data.append({
+            'id': image.id,
+            'filename': image.filename,
+            'original_filename': image.original_filename,
+            'file_size': image.file_size,
+            'mime_type': image.mime_type
+        })
+    
+    return jsonify(images_data)
+
 @posts_bp.route('/search')
 @login_required
 def search():
