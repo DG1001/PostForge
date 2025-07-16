@@ -1,176 +1,240 @@
 # PostForge - LinkedIn Post Manager
 
-Eine lokale Web-Anwendung zum Erstellen, Importieren und Verwalten von LinkedIn Posts mit PDF-Import-Funktionalität, Bilderverwaltung und internen Notizen.
+A comprehensive LinkedIn post management application designed as a local web application for creating, importing, and managing LinkedIn posts with PDF import functionality and image management.
 
 ## Features
 
-- **Post-Management**: Erstellen, bearbeiten und organisieren Sie LinkedIn Posts
-- **PDF-Import**: Importieren Sie vorhandene Posts aus LinkedIn PDF-Exporten
-- **Bilderverwaltung**: Hochladen und Verwalten mehrerer Bilder pro Post
-- **Status-Tracking**: Verfolgen Sie den Status Ihrer Posts (Entwurf, Veröffentlicht, Geplant)
-- **Interaktive UI**: Moderne Benutzeroberfläche mit Alpine.js und HTMX
-- **Drag & Drop**: Einfache Datei-Uploads per Drag & Drop
+### 📝 Post Management
+- **Create & Edit Posts** - Full CRUD operations with rich text editing
+- **Status Tracking** - Draft, Posted, Imported, Scheduled status management
+- **Post Preview** - Real-time preview while editing
+- **Search & Filter** - Find posts by content, hashtags, or status
+- **Pagination** - Efficient browsing of large post collections
+
+### 📄 PDF Import
+- **LinkedIn PDF Import** - Import posts from LinkedIn data export PDFs
+- **Intelligent Parsing** - Advanced pattern recognition for German LinkedIn exports
+- **Content Cleaning** - Automatically removes LinkedIn UI elements and artifacts
+- **Metadata Extraction** - Extracts author, company, engagement stats, and timestamps
+- **Preview Before Import** - Review and select which posts to import
+
+### 🖼️ Image Management
+- **Multi-Image Upload** - Drag & drop or browse to upload multiple images
+- **Image Gallery** - Visual management of post images
+- **Thumbnail Generation** - Automatic thumbnail creation
+- **File Validation** - Support for PNG, JPG, GIF, WEBP up to 10MB
+- **Download for LinkedIn** - Easy download of images for LinkedIn posting
+
+### 📋 LinkedIn Integration
+- **Smart Copy Function** - Copy text to clipboard
+- **Image Download Modal** - Download all post images with original filenames
+- **Complete Workflow** - Text + images ready for LinkedIn posting
+
+### 🔐 User Management
+- **Secure Authentication** - User registration and login system
+- **Personal Posts** - Each user manages their own posts
+- **Session Management** - Secure session handling with Flask-Login
 
 ## Tech Stack
 
-- **Backend**: Flask 3.0, SQLAlchemy 2.0, Python 3.11+
-- **Frontend**: TailwindCSS 3.x, Alpine.js 3.x, HTMX 1.9
-- **Database**: SQLite (migrierbar zu PostgreSQL)
-- **Authentication**: Flask-Login
-- **File Processing**: PyPDF2, Pillow
+### Backend
+- **Python 3.11+** - Modern Python with type hints
+- **Flask 3.0** - Lightweight web framework
+- **SQLAlchemy 2.0** - Modern ORM with async support
+- **Flask-Login** - User session management
+- **Flask-WTF** - Form handling and CSRF protection
+- **Flask-Migrate** - Database migrations
+
+### Frontend
+- **Jinja2** - Server-side templating
+- **TailwindCSS 3.x** - Utility-first CSS framework
+- **Alpine.js 3.x** - Lightweight JavaScript framework
+- **HTMX 1.9** - Modern web interactions
+
+### Database
+- **SQLite** - Development database
+- **PostgreSQL Ready** - Production migration capability
+
+### File Processing
+- **pdfplumber** - Advanced PDF text extraction
+- **PyPDF2** - Fallback PDF processing
+- **Pillow** - Image processing and validation
 
 ## Installation
 
-### 1. Repository klonen
+### Prerequisites
+- Python 3.11 or higher
+- Node.js (for TailwindCSS building)
+
+### Setup
+
+1. **Clone the repository**
 ```bash
 git clone <repository-url>
 cd PostForge
 ```
 
-### 2. Virtual Environment erstellen
+2. **Create virtual environment**
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# oder
-venv\Scripts\activate     # Windows
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# or
+.venv\Scripts\activate     # Windows
 ```
 
-### 3. Dependencies installieren
+3. **Install Python dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Node.js Dependencies installieren
+4. **Install Node.js dependencies**
 ```bash
 npm install
 ```
 
-### 5. TailwindCSS kompilieren
+5. **Build TailwindCSS**
 ```bash
 npm run build-css
 ```
 
-### 6. Umgebungsvariablen konfigurieren
-```bash
-cp .env.example .env
-# .env Datei nach Bedarf anpassen
-```
-
-### 7. Anwendung starten
-```bash
-python app.py
-```
-
-Die Anwendung ist dann unter `http://localhost:5000` verfügbar.
-
-## Standard-Benutzer
-
-Bei der ersten Ausführung wird automatisch ein Standard-Benutzer erstellt:
-- **Benutzername**: admin
-- **Passwort**: admin123
-
-**Wichtig**: Ändern Sie das Passwort nach der ersten Anmeldung!
-
-## Verwendung
-
-### Posts erstellen
-1. Klicken Sie auf "Neuen Post erstellen"
-2. Geben Sie Titel und Inhalt ein
-3. Fügen Sie optional Hashtags und Notizen hinzu
-4. Laden Sie Bilder hoch (Drag & Drop unterstützt)
-5. Wählen Sie den Status und speichern Sie
-
-### PDF-Import
-1. Gehen Sie zu "PDF Import"
-2. Laden Sie eine LinkedIn PDF-Datei hoch
-3. Überprüfen Sie die erkannten Posts
-4. Wählen Sie die zu importierenden Posts aus
-5. Bestätigen Sie den Import
-
-### Bilderverwaltung
-- Drag & Drop von Bildern direkt in den Editor
-- Unterstützte Formate: PNG, JPG, JPEG, GIF, WEBP
-- Automatische Thumbnail-Generierung
-- Bildlöschung mit einem Klick
-
-## Entwicklung
-
-### TailwindCSS Development
-```bash
-npm run build-css  # Watch mode für Entwicklung
-npm run build-css-prod  # Production Build
-```
-
-### Database Migrations
+6. **Initialize database**
 ```bash
 flask db init
 flask db migrate -m "Initial migration"
 flask db upgrade
 ```
 
-### Projektstruktur
+7. **Run the application**
+```bash
+python app.py
+```
+
+The application will be available at `http://localhost:5000`
+
+## Usage
+
+### Getting Started
+1. **Register** a new account or login
+2. **Create your first post** using the "Neuen Post erstellen" button
+3. **Upload images** by dragging and dropping files
+4. **Import LinkedIn posts** from PDF exports
+
+### LinkedIn PDF Import
+1. Navigate to **Upload → PDF Import**
+2. Upload your LinkedIn data export PDF
+3. **Preview** the extracted posts
+4. **Select** which posts to import
+5. Posts are imported with "imported" status
+
+### Copying for LinkedIn
+1. Click **"Für LinkedIn kopieren"** on any post
+2. Text is automatically copied to clipboard
+3. If the post has images, a **download modal** appears
+4. Download images and upload them to LinkedIn
+5. Paste the text content
+
+## Development
+
+### Project Structure
 ```
 PostForge/
-├── app/                    # Hauptanwendung
-│   ├── models/            # SQLAlchemy Models
-│   ├── routes/            # Flask Routes
-│   ├── templates/         # Jinja2 Templates
-│   ├── static/           # Statische Dateien
-│   ├── utils/            # Utility-Module
-│   └── forms/            # WTForms
-├── migrations/           # Database Migrations
-├── instance/            # Instance-spezifische Dateien
-└── requirements.txt     # Python Dependencies
+├── app/
+│   ├── models/          # Database models
+│   ├── routes/          # Flask routes
+│   ├── templates/       # Jinja2 templates
+│   ├── static/          # CSS, JS, uploads
+│   ├── utils/           # Utility modules
+│   └── forms/           # WTForms
+├── migrations/          # Database migrations
+├── instance/            # Instance-specific files
+├── requirements.txt     # Python dependencies
+├── package.json         # Node.js dependencies
+└── tailwind.config.js   # TailwindCSS configuration
+```
+
+### Development Commands
+
+```bash
+# Development server with auto-reload
+python app.py
+
+# Database operations
+flask db migrate -m "Migration description"
+flask db upgrade
+flask db downgrade
+
+# CSS development (watch mode)
+npm run build-css
+
+# CSS production build
+npm run build-css-prod
+```
+
+### Configuration
+
+The application supports different configurations:
+- **Development**: Debug enabled, SQLite database
+- **Production**: Optimized settings, PostgreSQL support
+
+Environment variables:
+- `SECRET_KEY` - Flask secret key
+- `DATABASE_URL` - Database connection string
+- `FLASK_CONFIG` - Configuration environment (default, development, production)
+
+## Security Features
+
+- **CSRF Protection** - All forms protected against CSRF attacks
+- **File Upload Validation** - Secure file type and size validation
+- **Session Security** - Secure cookie settings
+- **Input Sanitization** - Protection against XSS attacks
+- **User Isolation** - Users can only access their own posts
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Testing
+
+The application includes comprehensive testing:
+- Unit tests for models and utilities
+- Integration tests for file upload and processing
+- Frontend component tests for Alpine.js interactions
+
+```bash
+# Run tests (when implemented)
+python -m pytest
 ```
 
 ## Deployment
 
-### Gunicorn
-```bash
-gunicorn -w 4 -b 0.0.0.0:8000 app:app
-```
+### Production Setup
+1. Use **Gunicorn** + **Nginx** for production
+2. Set environment variables for security
+3. Use **PostgreSQL** for production database
+4. Enable SSL/HTTPS
+5. Configure proper backup strategies
 
-### Nginx (Beispiel-Konfiguration)
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-    
-    location /static {
-        alias /path/to/PostForge/app/static;
-    }
-}
-```
+### Docker Support
+Docker configuration available for containerized deployment.
 
-## Konfiguration
+## License
 
-### Environment Variables
-- `SECRET_KEY`: Flask Secret Key
-- `DATABASE_URL`: Database Connection String
-- `FLASK_CONFIG`: Konfigurationsmodus (development/production)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Upload-Limits
-- **Bilder**: 10MB pro Datei
-- **PDFs**: 16MB pro Datei
-- **Unterstützte Bildformate**: PNG, JPG, JPEG, GIF, WEBP
+## Acknowledgments
 
-## Sicherheit
-
-- CSRF-Protection durch Flask-WTF
-- Datei-Upload-Validierung
-- Session-Sicherheit
-- Input-Sanitization
-
-## Lizenz
-
-MIT License - siehe LICENSE-Datei für Details.
+- Built with modern web technologies
+- Inspired by the need for better LinkedIn content management
+- Designed for content creators and social media managers
 
 ## Support
 
-Bei Problemen oder Fragen erstellen Sie bitte ein Issue im Repository.
+For support, please open an issue on the GitHub repository or contact the development team.
+
+---
+
+**PostForge** - Forge your LinkedIn presence with ease! 🔥
