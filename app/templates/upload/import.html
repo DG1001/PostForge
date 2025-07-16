@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}PDF Import - PostForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">PDF Import</h1>
+    <p class="text-gray-600 mt-2">Importieren Sie Ihre LinkedIn Posts aus einer PDF-Datei</p>
+</div>
+
+<div class="max-w-2xl mx-auto">
+    <div class="card">
+        <div class="p-8">
+            <form method="POST" enctype="multipart/form-data" x-data="pdfUpload()">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-6">
+                    <label class="form-label">PDF-Datei auswählen</label>
+                    <div class="drag-zone mt-2" 
+                         @dragover.prevent="dragActive = true"
+                         @dragleave.prevent="dragActive = false"
+                         @drop.prevent="handlePdfDrop($event)"
+                         :class="{ 'active': dragActive }">
+                        
+                        <div class="space-y-4">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-medium">PDF-Datei hierher ziehen</span> oder
+                                    <label class="cursor-pointer text-blue-600 hover:text-blue-500">
+                                        <span>durchsuchen</span>
+                                        {{ form.pdf_file(class="sr-only", "@change"="handleFileSelect($event)") }}
+                                    </label>
+                                </p>
+                                <p class="text-xs text-gray-500">Nur PDF-Dateien bis zu 16MB</p>
+                            </div>
+                        </div>
+                        
+                        <div x-show="uploading" class="mt-4">
+                            <div class="flex items-center justify-center">
+                                <div class="spinner"></div>
+                                <span class="ml-2 text-sm text-gray-600">PDF wird verarbeitet...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Wie funktioniert der Import?</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                        <li>Laden Sie Ihre LinkedIn PDF-Datei hoch</li>
+                        <li>Die PDF wird automatisch analysiert und Posts extrahiert</li>
+                        <li>Sie können die erkannten Posts vor dem Import überprüfen</li>
+                        <li>Wählen Sie die Posts aus, die Sie importieren möchten</li>
+                        <li>Die ausgewählten Posts werden in Ihr PostForge-Konto importiert</li>
+                    </ol>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Hinweise</h3>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-gray-600">
+                        <li>Stellen Sie sicher, dass die PDF-Datei von LinkedIn stammt</li>
+                        <li>Die Erkennungsgenauigkeit hängt vom PDF-Format ab</li>
+                        <li>Posts werden als "Importiert" markiert</li>
+                        <li>Engagement-Statistiken werden falls verfügbar übernommen</li>
+                    </ul>
+                </div>
+                
+                <div class="flex justify-center">
+                    {{ form.submit(class="btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function pdfUpload() {
+    return {
+        dragActive: false,
+        uploading: false,
+        
+        handlePdfDrop(event) {
+            event.preventDefault();
+            this.dragActive = false;
+            const files = Array.from(event.dataTransfer.files);
+            const pdfFiles = files.filter(f => f.type === 'application/pdf');
+            
+            if (pdfFiles.length > 0) {
+                this.uploadPdf(pdfFiles[0]);
+            } else {
+                alert('Bitte wählen Sie eine PDF-Datei aus.');
+            }
+        },
+        
+        handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                this.uploadPdf(file);
+            } else {
+                alert('Bitte wählen Sie eine PDF-Datei aus.');
+            }
+        },
+        
+        uploadPdf(file) {
+            this.uploading = true;
+            
+            // Set the file in the form input
+            const fileInput = document.querySelector('input[type="file"]');
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            
+            // Submit the form
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 500);
+        }
+    }
+}
+</script>
+{% endblock %}

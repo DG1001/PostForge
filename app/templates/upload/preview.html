@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Import Vorschau - PostForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Import Vorschau</h1>
+    <p class="text-gray-600 mt-2">Überprüfen Sie die erkannten Posts aus <strong>{{ pdf_filename }}</strong></p>
+</div>
+
+<form method="POST" action="{{ url_for('upload.confirm_import') }}">
+    <div class="mb-6">
+        <div class="flex justify-between items-center">
+            <p class="text-sm text-gray-600">{{ posts_data|length }} Posts erkannt</p>
+            <div class="space-x-4">
+                <button type="button" onclick="selectAll()" class="btn-secondary">
+                    Alle auswählen
+                </button>
+                <button type="button" onclick="selectNone()" class="btn-secondary">
+                    Alle abwählen
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="space-y-4 mb-8">
+        {% for post in posts_data %}
+            <div class="card">
+                <div class="p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 pt-1">
+                            <input type="checkbox" 
+                                   name="selected_posts" 
+                                   value="{{ loop.index0 }}" 
+                                   class="rounded border-gray-300 text-blue-600 focus:border-blue-500 focus:ring-blue-500"
+                                   checked>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-semibold text-gray-900">{{ post.title }}</h3>
+                                {% if post.date %}
+                                    <p class="text-sm text-gray-500">Datum: {{ post.date }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <p class="text-gray-700 whitespace-pre-wrap">{{ post.content }}</p>
+                            </div>
+                            
+                            {% if post.hashtags %}
+                                <div class="mb-4">
+                                    <p class="text-sm text-blue-600">{{ post.hashtags }}</p>
+                                </div>
+                            {% endif %}
+                            
+                            {% if post.engagement %}
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium">Engagement:</span> {{ post.engagement }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <span>{{ post.content|length }} Zeichen</span>
+                                <span class="status-badge bg-blue-100 text-blue-800">Wird importiert</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="flex justify-between">
+        <a href="{{ url_for('upload.import_pdf') }}" class="btn-secondary">
+            Zurück
+        </a>
+        
+        <div class="space-x-4">
+            <button type="submit" class="btn-primary">
+                Ausgewählte Posts importieren
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function selectAll() {
+    const checkboxes = document.querySelectorAll('input[name="selected_posts"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function selectNone() {
+    const checkboxes = document.querySelectorAll('input[name="selected_posts"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+</script>
+{% endblock %}

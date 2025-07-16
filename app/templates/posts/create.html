@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Post erstellen - PostForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Neuen Post erstellen</h1>
+    <p class="text-gray-600 mt-2">Erstellen Sie einen neuen LinkedIn Post</p>
+</div>
+
+<div class="max-w-4xl mx-auto">
+    <form method="POST" x-data="postEditor()">
+        {{ form.hidden_tag() }}
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Editor Section -->
+            <div class="space-y-6">
+                <div class="card">
+                    <div class="p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Post Details</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                {{ form.title.label(class="form-label") }}
+                                {{ form.title(class="form-input", x-model="post.title") }}
+                            </div>
+                            
+                            <div>
+                                {{ form.content.label(class="form-label") }}
+                                <div class="relative">
+                                    {{ form.content(class="form-input", rows="8", x-model="post.content") }}
+                                    <div class="absolute bottom-2 right-2 text-xs text-gray-500" 
+                                         :class="{ 'text-yellow-600': charCount > 2500, 'text-red-600': charCount > 3000 }">
+                                        <span x-text="charCount"></span>/3000
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                {{ form.hashtags.label(class="form-label") }}
+                                {{ form.hashtags(class="form-input", x-model="post.hashtags", placeholder="#linkedin #business #growth") }}
+                            </div>
+                            
+                            <div>
+                                {{ form.notes.label(class="form-label") }}
+                                {{ form.notes(class="form-input", rows="3", x-model="post.notes", placeholder="Interne Notizen...") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Einstellungen</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                {{ form.status.label(class="form-label") }}
+                                {{ form.status(class="form-input") }}
+                            </div>
+                            
+                            <div>
+                                {{ form.scheduled_date.label(class="form-label") }}
+                                {{ form.scheduled_date(class="form-input") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="space-y-6">
+                <div class="card">
+                    <div class="p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Vorschau</h2>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                            <div class="mb-3">
+                                <h3 class="font-semibold text-gray-900" x-text="post.title || 'Titel eingeben...'"></h3>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <p class="text-gray-700 whitespace-pre-wrap" x-text="post.content || 'Inhalt eingeben...'"></p>
+                            </div>
+                            
+                            <div x-show="post.hashtags">
+                                <p class="text-blue-600 text-sm" x-text="post.hashtags"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-between">
+            <a href="{{ url_for('posts.index') }}" class="btn-secondary">
+                Abbrechen
+            </a>
+            
+            <div class="space-x-4">
+                {{ form.submit(class="btn-primary") }}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function postEditor() {
+    return {
+        post: {
+            title: '',
+            content: '',
+            hashtags: '',
+            notes: '',
+            scheduledDate: ''
+        },
+        charCount: 0,
+        maxChars: 3000,
+        
+        init() {
+            this.$watch('post.content', value => {
+                this.charCount = value.length;
+            });
+        }
+    }
+}
+</script>
+{% endblock %}

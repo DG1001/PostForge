@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Anmelden - PostForge{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="card">
+        <div class="p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-900">Anmelden</h1>
+                <p class="text-gray-600 mt-2">Melden Sie sich bei Ihrem PostForge-Konto an</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-4">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-input") }}
+                </div>
+                
+                <div class="mb-4">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-input") }}
+                </div>
+                
+                <div class="flex items-center mb-6">
+                    {{ form.remember_me(class="rounded border-gray-300 text-blue-600 focus:border-blue-500 focus:ring-blue-500") }}
+                    {{ form.remember_me.label(class="ml-2 text-sm text-gray-600") }}
+                </div>
+                
+                <div class="mb-6">
+                    {{ form.submit(class="btn-primary w-full") }}
+                </div>
+                
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        Noch kein Konto? 
+                        <a href="{{ url_for('auth.register') }}" class="text-blue-600 hover:text-blue-500">
+                            Hier registrieren
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

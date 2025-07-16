@@ -1,0 +1,52 @@
+<nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <a href="{{ url_for('main.index') }}" class="text-xl font-bold text-gray-900">
+                    <span class="linkedin-blue">Post</span><span class="text-gray-700">Forge</span>
+                </a>
+            </div>
+            
+            {% if current_user.is_authenticated %}
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        Dashboard
+                    </a>
+                    <a href="{{ url_for('posts.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        Posts
+                    </a>
+                    <a href="{{ url_for('posts.create') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        Erstellen
+                    </a>
+                    <a href="{{ url_for('upload.import_pdf') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        PDF Import
+                    </a>
+                    
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                            <span>{{ current_user.username }}</span>
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Abmelden
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('auth.login') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        Anmelden
+                    </a>
+                    <a href="{{ url_for('auth.register') }}" class="btn-primary">
+                        Registrieren
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
