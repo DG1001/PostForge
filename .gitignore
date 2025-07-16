@@ -1,3 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
 .venv/
-CLAUDE.md
+ENV/
+env.bak/
+venv.bak/
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+
+# Database
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node.js
 node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Uploads (optional - remove if you want to track uploaded files)
+app/static/uploads/images/*
+app/static/uploads/pdfs/*
+!app/static/uploads/images/.gitkeep
+!app/static/uploads/pdfs/.gitkeep
+
+# Logs
+*.log
+
+# CLAUDE.md (project instructions)
+CLAUDE.md

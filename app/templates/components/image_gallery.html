@@ -1,7 +1,7 @@
 {% macro image_gallery(images, editable=false) %}
 <div class="image-gallery" id="image-gallery">
     {% for image in images %}
-        <div class="image-item" id="image-{{ image.id }}">
+        <div class="image-item group" id="image-{{ image.id }}">
             <img src="{{ url_for('static', filename='uploads/images/' + image.filename) }}" 
                  alt="{{ image.original_filename }}" 
                  loading="lazy">

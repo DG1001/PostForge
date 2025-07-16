@@ -93,7 +93,7 @@
 }
 
 .image-item {
-  @apply relative group rounded-lg overflow-hidden;
+  @apply relative rounded-lg overflow-hidden;
 }
 
 .image-item img {
@@ -106,7 +106,7 @@
 
 /* Post content styles */
 .post-content {
-  @apply prose prose-sm max-w-none;
+  @apply text-gray-700 leading-relaxed;
 }
 
 .post-content p {

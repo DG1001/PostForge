@@ -46,7 +46,7 @@
         {% if post.images %}
             <div class="image-gallery mb-4">
                 {% for image in post.images[:4] %}
-                    <div class="image-item">
+                    <div class="image-item group">
                         <img src="{{ url_for('static', filename='uploads/images/' + image.filename) }}" 
                              alt="{{ image.original_filename }}" 
                              class="w-full h-24 object-cover rounded">
