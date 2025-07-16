@@ -63,6 +63,14 @@
                                 </div>
                             {% endif %}
                             
+                            {% if post.notes %}
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium">Metadata:</span> {{ post.notes }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                            
                             <div class="flex items-center justify-between text-sm text-gray-500">
                                 <span>{{ post.content|length }} Zeichen</span>
                                 <span class="status-badge bg-blue-100 text-blue-800">Wird importiert</span>

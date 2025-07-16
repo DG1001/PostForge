@@ -90,6 +90,7 @@ def confirm_import():
                     title=post_data.get('title', 'Importierter Post'),
                     content=post_data.get('content', ''),
                     hashtags=post_data.get('hashtags', ''),
+                    notes=post_data.get('notes', ''),
                     status='imported',
                     engagement_stats=post_data.get('engagement', '')
                 )

@@ -2,6 +2,7 @@ import PyPDF2
 import re
 from datetime import datetime
 from typing import List, Dict
+from .linkedin_pdf_parser import LinkedInSpecificParser
 
 class LinkedInPDFParser:
     def __init__(self):
@@ -13,77 +14,44 @@ class LinkedInPDFParser:
         self.engagement_pattern = r'(\d+)\s+(Likes?|Kommentare?|Comments?)'
     
     def parse_pdf(self, pdf_path: str) -> List[Dict]:
-        """Parse LinkedIn PDF and extract posts"""
-        posts = []
-        
+        """Parse LinkedIn PDF using enhanced LinkedIn-specific parser"""
         try:
-            with open(pdf_path, 'rb') as file:
-                reader = PyPDF2.PdfReader(file)
-                full_text = ""
-                
-                # Limit to first 50 pages to prevent timeout
-                max_pages = min(len(reader.pages), 50)
-                
-                for i in range(max_pages):
-                    try:
-                        page_text = reader.pages[i].extract_text()
-                        full_text += page_text + "\n"
-                        
-                        # Stop if we've extracted enough text (>100KB)
-                        if len(full_text) > 100000:
-                            break
-                            
-                    except Exception as e:
-                        # Skip problematic pages
-                        continue
+            # Use the new LinkedIn-specific parser
+            linkedin_parser = LinkedInSpecificParser()
+            posts = linkedin_parser.parse_pdf(pdf_path)
             
-            # If no text was extracted, create a sample post
-            if not full_text.strip():
-                return [{
-                    'title': 'PDF Import Test',
-                    'content': 'Dies ist ein Test-Post aus der importierten PDF-Datei. Der Textinhalt konnte nicht automatisch extrahiert werden.',
-                    'hashtags': '#linkedin #import',
-                    'date': '',
-                    'engagement': ''
-                }]
-            
-            # Split into individual posts (customize based on LinkedIn PDF format)
-            post_sections = self._split_into_posts(full_text)
-            
-            # Limit number of posts to prevent overwhelming the user
-            max_posts = min(len(post_sections), 20)
-            
-            for i in range(max_posts):
-                section = post_sections[i]
-                post_data = {
-                    'title': self._extract_title(section),
-                    'content': self._extract_content(section),
-                    'hashtags': self._extract_hashtags(section),
-                    'date': self._extract_date(section),
-                    'engagement': self._extract_engagement(section)
+            # Convert to legacy format for compatibility
+            legacy_posts = []
+            for post in posts:
+                legacy_post = {
+                    'title': post.get('title', 'LinkedIn Post'),
+                    'content': post.get('content', ''),
+                    'hashtags': post.get('hashtags', ''),
+                    'date': post.get('date', ''),
+                    'engagement': post.get('engagement', '')
                 }
-                posts.append(post_data)
+                
+                # Add additional metadata as notes if available
+                notes_parts = []
+                if post.get('author'):
+                    notes_parts.append(f"Autor: {post['author']}")
+                if post.get('company'):
+                    notes_parts.append(f"Unternehmen: {post['company']}")
+                if post.get('followers'):
+                    notes_parts.append(f"Follower: {post['followers']}")
+                if post.get('timestamp'):
+                    notes_parts.append(f"Zeitstempel: {post['timestamp']}")
+                
+                if notes_parts:
+                    legacy_post['notes'] = ' | '.join(notes_parts)
+                
+                legacy_posts.append(legacy_post)
             
-            # If no posts were found, create a sample post
-            if not posts:
-                posts.append({
-                    'title': 'Importierter Content',
-                    'content': full_text[:500] + '...' if len(full_text) > 500 else full_text,
-                    'hashtags': '',
-                    'date': '',
-                    'engagement': ''
-                })
+            return legacy_posts if legacy_posts else self._create_fallback_posts()
             
-            return posts
         except Exception as e:
-            # Return a sample post if parsing fails
-            return [{
-                'title': 'PDF Import Fehler',
-                'content': f'Die PDF-Datei konnte nicht vollständig verarbeitet werden. Fehler: {str(e)[:200]}...',
-                'hashtags': '#import #error',
-                'date': '',
-                'engagement': ''
-            }]
+            # Fallback to original parsing if new parser fails
+            return self._fallback_parse(pdf_path, str(e))
     
     def _split_into_posts(self, text: str) -> List[str]:
         """Split PDF text into individual posts"""
@@ -122,6 +90,53 @@ class LinkedInPDFParser:
             return paragraphs[:10]  # Limit to 10 paragraphs
         
         return posts
+    
+    def _create_fallback_posts(self) -> List[Dict]:
+        """Create fallback posts when no content is extracted"""
+        return [{
+            'title': 'PDF Import Test',
+            'content': 'Dies ist ein Test-Post aus der importierten PDF-Datei. Der Textinhalt konnte nicht automatisch extrahiert werden.',
+            'hashtags': '#linkedin #import',
+            'date': '',
+            'engagement': '',
+            'notes': 'Automatisch generierter Test-Post'
+        }]
+    
+    def _fallback_parse(self, pdf_path: str, error_msg: str) -> List[Dict]:
+        """Fallback to basic parsing if enhanced parser fails"""
+        try:
+            with open(pdf_path, 'rb') as file:
+                reader = PyPDF2.PdfReader(file)
+                full_text = ""
+                
+                for i, page in enumerate(reader.pages[:5]):  # Limit to 5 pages for fallback
+                    try:
+                        page_text = page.extract_text()
+                        full_text += page_text + "\n"
+                    except:
+                        continue
+                
+                if full_text.strip():
+                    return [{
+                        'title': 'Importierter Content (Fallback)',
+                        'content': full_text[:1000] + '...' if len(full_text) > 1000 else full_text,
+                        'hashtags': '',
+                        'date': '',
+                        'engagement': '',
+                        'notes': f'Fallback-Parser verwendet. Fehler: {error_msg}'
+                    }]
+                else:
+                    return self._create_fallback_posts()
+                    
+        except Exception as fallback_error:
+            return [{
+                'title': 'PDF Import Fehler',
+                'content': f'Die PDF-Datei konnte nicht verarbeitet werden. Ursprünglicher Fehler: {error_msg}. Fallback-Fehler: {str(fallback_error)}',
+                'hashtags': '#import #error',
+                'date': '',
+                'engagement': '',
+                'notes': 'Beide Parser fehlgeschlagen'
+            }]
     
     def _extract_title(self, text: str) -> str:
         """Extract title from post text"""
