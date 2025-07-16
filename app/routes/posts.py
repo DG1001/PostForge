@@ -105,10 +105,11 @@ def delete(id):
     try:
         db.session.delete(post)
         db.session.commit()
-        return '', 204
+        # Return empty content to replace the post card
+        return '', 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Fehler beim Löschen des Posts'}), 500
+        return '<div class="text-red-600 text-sm p-2">Fehler beim Löschen des Posts</div>', 500
 
 @posts_bp.route('/<int:id>/copy', methods=['POST'])
 @login_required
