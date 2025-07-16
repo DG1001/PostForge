@@ -23,13 +23,13 @@
                         <div class="space-y-4">
                             <div>
                                 {{ form.title.label(class="form-label") }}
-                                {{ form.title(class="form-input", x-model="post.title") }}
+                                {{ form.title(class="form-input", **{"x-model": "post.title"}) }}
                             </div>
                             
                             <div>
                                 {{ form.content.label(class="form-label") }}
                                 <div class="relative">
-                                    {{ form.content(class="form-input", rows="8", x-model="post.content") }}
+                                    {{ form.content(class="form-input", rows="8", **{"x-model": "post.content"}) }}
                                     <div class="absolute bottom-2 right-2 text-xs text-gray-500" 
                                          :class="{ 'text-yellow-600': charCount > 2500, 'text-red-600': charCount > 3000 }">
                                         <span x-text="charCount"></span>/3000
@@ -39,12 +39,12 @@
                             
                             <div>
                                 {{ form.hashtags.label(class="form-label") }}
-                                {{ form.hashtags(class="form-input", x-model="post.hashtags", placeholder="#linkedin #business #growth") }}
+                                {{ form.hashtags(class="form-input", placeholder="#linkedin #business #growth", **{"x-model": "post.hashtags"}) }}
                             </div>
                             
                             <div>
                                 {{ form.notes.label(class="form-label") }}
-                                {{ form.notes(class="form-input", rows="3", x-model="post.notes", placeholder="Interne Notizen...") }}
+                                {{ form.notes(class="form-input", rows="3", placeholder="Interne Notizen...", **{"x-model": "post.notes"}) }}
                             </div>
                         </div>
                     </div>
