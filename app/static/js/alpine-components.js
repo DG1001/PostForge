@@ -32,6 +32,14 @@ function postEditor() {
             const formData = new FormData();
             files.forEach(file => formData.append('images', file));
             
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                             document.querySelector('input[name="csrf_token"]')?.value;
+            
+            // Add CSRF token to form data
+            if (csrfToken) {
+                formData.append('csrf_token', csrfToken);
+            }
+            
             // HTMX Upload
             htmx.ajax('POST', '/upload/images', {
                 values: formData,
@@ -40,7 +48,11 @@ function postEditor() {
         },
         
         removeImage(imageId) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                             document.querySelector('input[name="csrf_token"]')?.value;
+            
             htmx.ajax('DELETE', `/upload/images/${imageId}/delete`, {
+                headers: { 'X-CSRFToken': csrfToken },
                 target: '#image-gallery'
             });
         }
@@ -71,8 +83,12 @@ function pdfUpload() {
             const formData = new FormData();
             formData.append('pdf', file);
             
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                             document.querySelector('input[name="csrf_token"]')?.value;
+            
             htmx.ajax('POST', '/upload/pdf', {
                 values: formData,
+                headers: { 'X-CSRFToken': csrfToken },
                 target: '#pdf-preview',
                 indicator: '#upload-progress'
             }).then(() => {
@@ -112,6 +128,14 @@ function imageUpload(postId) {
             
             if (postId) {
                 formData.append('post_id', postId);
+            }
+            
+            // Get CSRF token from meta tag or form and add to form data
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                             document.querySelector('input[name="csrf_token"]')?.value;
+            
+            if (csrfToken) {
+                formData.append('csrf_token', csrfToken);
             }
             
             htmx.ajax('POST', '/upload/images', {

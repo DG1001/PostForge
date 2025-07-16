@@ -73,11 +73,13 @@
                     <div class="p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Bilder</h2>
                         
-                        {% if post.images %}
-                            <div class="mb-6">
+                        <div id="image-gallery-container" class="mb-6">
+                            {% if post.images %}
                                 {{ image_gallery(post.images, editable=true) }}
-                            </div>
-                        {% endif %}
+                            {% else %}
+                                <div class="image-gallery" id="image-gallery"></div>
+                            {% endif %}
+                        </div>
                         
                         {{ image_upload_zone(post.id) }}
                     </div>
@@ -217,10 +219,35 @@ function imageUpload(postId) {
                 formData.append('post_id', postId);
             }
             
-            htmx.ajax('POST', '/upload/images', {
-                values: formData,
-                target: '#image-gallery'
-            }).then(() => {
+            // Add CSRF token to form data
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                             document.querySelector('input[name="csrf_token"]')?.value;
+            
+            if (csrfToken) {
+                formData.append('csrf_token', csrfToken);
+            }
+            
+            // Use fetch instead of htmx.ajax for file uploads
+            fetch('/upload/images', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                console.log('Upload response:', html);
+                const container = document.getElementById('image-gallery-container');
+                if (container) {
+                    container.innerHTML = html;
+                } else {
+                    console.error('Container not found');
+                }
+                this.uploading = false;
+            })
+            .catch(error => {
+                console.error('Upload error:', error);
                 this.uploading = false;
             });
         }

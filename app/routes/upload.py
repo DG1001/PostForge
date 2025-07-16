@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from app import db
+from app import db, csrf
 from app.models.post import Post
 from app.models.image import Image
 from app.forms.posts import PDFUploadForm, ImageUploadForm
@@ -113,6 +113,7 @@ def confirm_import():
 
 @upload_bp.route('/images', methods=['POST'])
 @login_required
+@csrf.exempt
 def upload_images():
     post_id = request.form.get('post_id')
     files = request.files.getlist('images')
@@ -162,14 +163,21 @@ def upload_images():
     if post_id:
         # Return updated image gallery
         post = Post.query.get(post_id)
-        return render_template('components/image_gallery.html', 
-                             images=post.images, 
-                             editable=True)
+        from flask import render_template_string
+        
+        # Create template that calls the macro properly
+        template = '''
+        {% from "components/image_gallery.html" import image_gallery %}
+        {{ image_gallery(images, editable=true) }}
+        '''
+        
+        return render_template_string(template, images=post.images)
     
     return jsonify({'uploaded': uploaded_images})
 
 @upload_bp.route('/images/<int:image_id>/delete', methods=['DELETE'])
 @login_required
+@csrf.exempt
 def delete_image(image_id):
     image = Image.query.join(Post).filter(
         Image.id == image_id,
@@ -185,7 +193,7 @@ def delete_image(image_id):
         db.session.delete(image)
         db.session.commit()
         
-        return '', 204
+        return '', 200
     
     except Exception as e:
         db.session.rollback()
