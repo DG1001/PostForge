@@ -31,7 +31,7 @@
     </main>
     
     <!-- Global Image Download Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" onclick="closeImageModal()">
+    <div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" style="display: none;" onclick="closeImageModal()">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
                 <div class="p-6">
@@ -57,6 +57,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- Ensure modal is hidden on page load -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('imageModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            modal.style.visibility = 'hidden';
+            modal.style.opacity = '0';
+        }
+    });
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>

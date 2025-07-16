@@ -295,7 +295,21 @@ window.closeImageModal = function() {
     const modal = document.getElementById('imageModal');
     if (modal) {
         modal.classList.add('hidden');
-        modal.style.display = 'none'; // Force hide
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+        modal.style.position = '';
+        modal.style.top = '';
+        modal.style.left = '';
+        modal.style.right = '';
+        modal.style.bottom = '';
+        modal.style.zIndex = '';
+        
+        // Clear the image list
+        const imageList = document.getElementById('imageDownloadList');
+        if (imageList) {
+            imageList.innerHTML = '';
+        }
     }
 };
 
