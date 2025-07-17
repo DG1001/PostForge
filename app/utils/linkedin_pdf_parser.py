@@ -14,7 +14,7 @@ class LinkedInSpecificParser:
     """Enhanced LinkedIn PDF parser based on real LinkedIn PDF structure analysis"""
     
     def __init__(self):
-        self.timestamp_pattern = r'(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)(?:\s*[•·])?'
+        self.timestamp_pattern = r'(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)\s*[•·]?'
         self.company_pattern = r'([^\n]+(?:GmbH|AG|Inc|LLC|Ltd|Corporation|Corp)[^\n]*)'
         self.follower_pattern = r'(\d+(?:\.\d+)?[KM]?)\s+Follower'
         self.engagement_patterns = {
@@ -90,15 +90,14 @@ class LinkedInSpecificParser:
             if not page_content.strip():
                 continue
                 
-            # Check if this page contains engagement data
-            if 'Reaktionen' in page_content or 'Gefällt mir' in page_content:
-                engagement_data.update(self._extract_engagement_data(page_content))
-                continue
-            
-            # Look for post content (clean after processing page)
+            # First try to extract post content
             post_data = self._extract_post_from_page(page_content)
             if post_data:
                 posts.append(post_data)
+            
+            # Also check for engagement data on the same page
+            if 'Reaktionen' in page_content or 'Gefällt mir' in page_content:
+                engagement_data.update(self._extract_engagement_data(page_content))
         
         # Associate engagement data with posts
         if engagement_data and posts:
@@ -116,9 +115,11 @@ class LinkedInSpecificParser:
         if not timestamp_match:
             # Try alternative patterns
             alt_patterns = [
+                r'(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)\s*[•·]',  # With bullet point
                 r'(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)',  # Without bullet point
                 r'vor\s+(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)',  # With "vor"
                 r'(\d+)\s*(mo|w|d|h|Mo|W|D|H)',  # Abbreviated
+                r'Follower:innen\s*\n\s*(\d+)\s+(Monate?|Wochen?|Tage?|Stunden?)',  # After follower count
             ]
             
             for alt_pattern in alt_patterns:
