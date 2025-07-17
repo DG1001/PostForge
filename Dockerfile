@@ -16,8 +16,8 @@ RUN apt-get update && apt-get install -y \
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm ci --only=production
+# Install Node.js dependencies including devDependencies for TailwindCSS
+RUN npm ci
 
 # Copy requirements first for better caching
 COPY requirements.txt .
