@@ -2,6 +2,8 @@
 
 A comprehensive LinkedIn post management application designed as a local web application for creating, importing, and managing LinkedIn posts with PDF import functionality and image management.
 
+![PostForge Dashboard](screen.png)
+
 ## Features
 
 ### 📝 Post Management
