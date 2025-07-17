@@ -219,7 +219,76 @@ python -m pytest
 5. Configure proper backup strategies
 
 ### Docker Support
-Docker configuration available for containerized deployment.
+
+The easiest way to run PostForge is using Docker:
+
+```bash
+# Pull and run the latest image
+docker run -d \
+  --name postforge \
+  -p 5000:5000 \
+  -v postforge_data:/app/instance \
+  -v postforge_uploads:/app/static/uploads \
+  ghcr.io/dg1001/postforge:latest
+```
+
+Access the application at `http://localhost:5000`
+
+**Docker Options:**
+- `-d` - Run in detached mode
+- `-p 5000:5000` - Map port 5000 to host
+- `-v postforge_data:/app/instance` - Persist database
+- `-v postforge_uploads:/app/static/uploads` - Persist uploaded files
+
+**Environment Variables:**
+```bash
+docker run -d \
+  --name postforge \
+  -p 5000:5000 \
+  -e SECRET_KEY="your-secret-key" \
+  -e ADMIN_PASSWORD="your-admin-password" \
+  -e FLASK_ENV="production" \
+  -v postforge_data:/app/instance \
+  -v postforge_uploads:/app/static/uploads \
+  ghcr.io/dg1001/postforge:latest
+```
+
+**Admin User Setup:**
+- **Username**: `admin` (fixed)
+- **Password**: Set via `ADMIN_PASSWORD` environment variable
+- **Auto-Generation**: If `ADMIN_PASSWORD` is not set, a random 12-character password is generated
+- **Password Display**: The password is shown in the Docker logs on first startup
+
+**Check generated password:**
+```bash
+docker logs postforge
+```
+
+**Docker Compose:**
+```yaml
+version: '3.8'
+services:
+  postforge:
+    image: ghcr.io/dg1001/postforge:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=your-secret-key
+      - ADMIN_PASSWORD=your-admin-password  # Optional: will be auto-generated if not set
+      - FLASK_ENV=production
+    volumes:
+      - postforge_data:/app/instance
+      - postforge_uploads:/app/static/uploads
+    restart: unless-stopped
+
+volumes:
+  postforge_data:
+  postforge_uploads:
+```
+
+**Available Tags:**
+- `latest` - Latest stable version
+- `vX.X.X` - Specific version tags
 
 ## License
 
