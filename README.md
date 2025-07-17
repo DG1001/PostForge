@@ -238,6 +238,7 @@ Under the following terms:
 - Built with modern web technologies
 - Inspired by the need for better LinkedIn content management
 - Designed for content creators and social media managers
+- **Created with the assistance of Claude Code using the Pro Plan subscription**
 
 ## Support
 
