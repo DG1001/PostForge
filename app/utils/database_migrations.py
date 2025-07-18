@@ -10,34 +10,13 @@ from app import db
 
 
 def check_column_exists(table_name, column_name):
-    """Check if a column exists in a table"""
+    """Check if a column exists in a table using SQLAlchemy"""
     try:
-        # Get database path
-        db_uri = current_app.config.get('SQLALCHEMY_DATABASE_URI', '')
-        if not db_uri or not db_uri.startswith('sqlite:///'):
-            return False
-            
-        db_path = db_uri.replace('sqlite:///', '')
-        
-        # Convert relative path to absolute
-        if not os.path.isabs(db_path):
-            db_path = os.path.join(os.getcwd(), db_path)
-            
-        if not os.path.exists(db_path):
-            return False
-            
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        # Get table info
-        cursor.execute(f"PRAGMA table_info({table_name})")
-        columns = [column[1] for column in cursor.fetchall()]
-        
-        conn.close()
-        return column_name in columns
-        
+        # Use SQLAlchemy to check column existence
+        with db.engine.connect() as connection:
+            result = connection.execute(db.text(f"SELECT {column_name} FROM {table_name} LIMIT 1"))
+            return True
     except Exception as e:
-        print(f"Error checking column existence: {e}")
         return False
 
 
@@ -250,11 +229,17 @@ def verify_database_schema():
             'images': ['file_path', 'file_size', 'mime_type']
         }
         
-        for table, columns in required_columns.items():
-            for column in columns:
-                if not check_column_exists(table, column):
-                    print(f"❌ Missing column: {table}.{column}")
-                    return False
+        # Use SQLAlchemy for verification instead of direct sqlite3
+        with db.engine.connect() as connection:
+            for table, columns in required_columns.items():
+                for column in columns:
+                    try:
+                        # Try to query the column
+                        result = connection.execute(db.text(f"SELECT {column} FROM {table} LIMIT 1"))
+                        print(f"✅ Column exists: {table}.{column}")
+                    except Exception as e:
+                        print(f"❌ Missing column: {table}.{column} - {e}")
+                        return False
         
         print("✅ Database schema verification passed")
         return True
