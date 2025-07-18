@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Posts importieren - PostForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Posts importieren</h1>
+    <p class="text-gray-600 mt-2">Importieren Sie Posts aus einer PostForge ZIP-Datei</p>
+</div>
+
+<!-- Back Button -->
+<div class="mb-6">
+    <a href="{{ url_for('export_import.index') }}" class="text-blue-600 hover:text-blue-800">
+        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Zurück zu Export/Import
+    </a>
+</div>
+
+<!-- Import Form -->
+<div class="card">
+    <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">ZIP-Datei hochladen</h2>
+        
+        <!-- Upload Form -->
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div>
+                <label class="form-label">PostForge ZIP-Datei auswählen</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="zip_file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                <span>Datei auswählen</span>
+                                <input id="zip_file" name="zip_file" type="file" accept=".zip" required class="sr-only" onchange="updateFileName(this)">
+                            </label>
+                            <p class="pl-1">oder hierher ziehen</p>
+                        </div>
+                        <p class="text-xs text-gray-500">
+                            Nur ZIP-Dateien bis 50MB
+                        </p>
+                        <p id="selected-file" class="text-sm text-gray-600 font-medium"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Import Options -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-gray-900 mb-3">Import-Einstellungen</h3>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="mark_imported" name="mark_imported" checked disabled class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="mark_imported" class="ml-2 block text-sm text-gray-900">
+                            Posts als "importiert" markieren
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="import_images" name="import_images" checked disabled class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="import_images" class="ml-2 block text-sm text-gray-900">
+                            Bilder mit importieren
+                        </label>
+                    </div>
+                </div>
+                
+                <p class="text-xs text-gray-500 mt-2">
+                    Einstellungen sind für maximale Sicherheit fixiert
+                </p>
+            </div>
+            
+            <!-- Warning -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Wichtiger Hinweis</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>
+                                Der Import kann nicht rückgängig gemacht werden. Stellen Sie sicher, dass Sie die richtige ZIP-Datei ausgewählt haben.
+                                Bestehende Posts werden nicht überschrieben.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                    </svg>
+                    Posts importieren
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function updateFileName(input) {
+    const fileName = input.files[0] ? input.files[0].name : '';
+    document.getElementById('selected-file').textContent = fileName;
+}
+
+// Drag and drop functionality
+const dropZone = document.querySelector('.border-dashed');
+const fileInput = document.getElementById('zip_file');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-blue-400', 'bg-blue-50');
+});
+
+dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].name.endsWith('.zip')) {
+        fileInput.files = files;
+        updateFileName(fileInput);
+    }
+});
+</script>
+{% endblock %}
