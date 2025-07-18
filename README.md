@@ -123,9 +123,7 @@ npm run build-css
 
 6. **Initialize database**
 ```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
+python init_db.py
 ```
 
 7. **Run the application**
@@ -133,7 +131,15 @@ flask db upgrade
 python app.py
 ```
 
-The application will be available at `http://localhost:5000`
+**Note:** Use `python app.py` instead of `flask run` for better compatibility with the database migration system.
+
+The application will be available at:
+- `http://localhost:5000` (local only)
+- `http://0.0.0.0:5000` (accessible from network)
+
+**Login credentials:**
+- **Username**: `admin`
+- **Password**: Check console output for auto-generated password
 
 ## Usage
 
@@ -145,7 +151,8 @@ The application will be available at `http://localhost:5000`
 
 ### Admin Setup
 - **Default Admin User**: `admin`
-- **Password**: Set via `ADMIN_PASSWORD` environment variable or auto-generated
+- **Password**: Auto-generated during first startup (displayed in console)
+- **Password Reset**: Use `python reset_admin_password.py` to reset admin password
 - **First Login**: Use admin credentials to access user management
 - **Registration Tokens**: Generate tokens for controlled user registration
 
@@ -206,10 +213,16 @@ PostForge/
 ### Development Commands
 
 ```bash
+# Initialize database (first time setup)
+python init_db.py
+
 # Development server with auto-reload
 python app.py
 
-# Database operations
+# Reset admin password
+python reset_admin_password.py
+
+# Database operations (for future migrations)
 flask db migrate -m "Migration description"
 flask db upgrade
 flask db downgrade
@@ -231,6 +244,7 @@ Environment variables:
 - `SECRET_KEY` - Flask secret key
 - `DATABASE_URL` - Database connection string
 - `FLASK_CONFIG` - Configuration environment (default, development, production)
+- `ADMIN_PASSWORD` - Set admin password (optional, auto-generated if not set)
 
 ## Security Features
 
