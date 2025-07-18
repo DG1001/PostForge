@@ -12,6 +12,7 @@ A comprehensive LinkedIn post management application designed as a local web app
 - **Post Preview** - Real-time preview while editing
 - **Search & Filter** - Find posts by content, hashtags, or status
 - **Pagination** - Efficient browsing of large post collections
+- **Post Duplication** - Copy existing posts for variations
 
 ### 📄 PDF Import
 - **LinkedIn PDF Import** - Import posts from LinkedIn data export PDFs
@@ -36,6 +37,27 @@ A comprehensive LinkedIn post management application designed as a local web app
 - **Secure Authentication** - User registration and login system
 - **Personal Posts** - Each user manages their own posts
 - **Session Management** - Secure session handling with Flask-Login
+
+### 📤 Export & Import
+- **Data Export** - Export all posts and images as ZIP file
+- **Data Import** - Import posts and images from ZIP files
+- **Cross-Platform** - Move posts between different PostForge instances
+- **Backup & Restore** - Complete backup of your post data
+- **Automatic Conflict Resolution** - Imported posts get unique filenames
+
+### 🔗 Post Review & Sharing
+- **Review Links** - Generate shareable links for post review
+- **Public Preview** - Share posts without requiring login
+- **Toggle Control** - Easily enable/disable sharing
+- **Secure Access** - Unique tokens for each shared post
+- **LinkedIn Preview** - Shows how posts will appear on LinkedIn
+
+### 👨‍💼 Admin Features
+- **User Management** - Admin can manage all users
+- **Registration Tokens** - Control user registration with invite tokens
+- **Token Generation** - Create and manage registration tokens
+- **User Overview** - View all registered users and their activity
+- **Access Control** - Restrict registration to invited users only
 
 ## Tech Stack
 
@@ -116,10 +138,16 @@ The application will be available at `http://localhost:5000`
 ## Usage
 
 ### Getting Started
-1. **Register** a new account or login
+1. **Register** a new account or login (admin user is created automatically)
 2. **Create your first post** using the "Neuen Post erstellen" button
 3. **Upload images** by dragging and dropping files
 4. **Import LinkedIn posts** from PDF exports
+
+### Admin Setup
+- **Default Admin User**: `admin`
+- **Password**: Set via `ADMIN_PASSWORD` environment variable or auto-generated
+- **First Login**: Use admin credentials to access user management
+- **Registration Tokens**: Generate tokens for controlled user registration
 
 ### LinkedIn PDF Import
 1. Navigate to **Upload → PDF Import**
@@ -134,6 +162,27 @@ The application will be available at `http://localhost:5000`
 3. If the post has images, a **download modal** appears
 4. Download images and upload them to LinkedIn
 5. Paste the text content
+
+### Export & Import
+1. **Export Posts**: Navigate to **Export/Import** section
+2. Click **"Posts exportieren"** to download all posts and images as ZIP
+3. **Import Posts**: Upload a ZIP file from another PostForge instance
+4. **Review Import**: Imported posts are marked with "imported" status
+5. **Conflict Resolution**: Images get unique filenames to prevent conflicts
+
+### Post Review & Sharing
+1. **Enable Sharing**: In post edit view, toggle "Für Review freigeben"
+2. **Copy Link**: Use the generated link to share with reviewers
+3. **Public Access**: Reviewers can view post without login
+4. **LinkedIn Preview**: Reviewers see how the post will look on LinkedIn
+5. **Disable Sharing**: Turn off sharing when review is complete
+
+### Admin Functions
+1. **Access Admin**: Login as admin user to access admin panel
+2. **User Management**: View all users, their post counts, and activity
+3. **Registration Tokens**: Generate tokens for controlled user registration
+4. **Token Management**: Create, view, and delete registration tokens
+5. **User Registration**: Share tokens with users for secure registration
 
 ## Development
 
@@ -190,6 +239,8 @@ Environment variables:
 - **Session Security** - Secure cookie settings
 - **Input Sanitization** - Protection against XSS attacks
 - **User Isolation** - Users can only access their own posts
+- **Secure Tokens** - Cryptographically secure tokens for sharing and registration
+- **Admin Access Control** - Admin functions restricted to admin users only
 
 ## Contributing
 
