@@ -1,5 +1,7 @@
 from app import db
 from datetime import datetime
+import secrets
+import string
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -15,6 +17,10 @@ class Post(db.Model):
     engagement_stats = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Review sharing fields
+    share_token = db.Column(db.String(64), unique=True, nullable=True)
+    is_shared = db.Column(db.Boolean, default=False)
     
     # Relationships
     images = db.relationship('Image', backref='post', lazy=True, cascade='all, delete-orphan')
@@ -56,6 +62,35 @@ class Post(db.Model):
             'scheduled': 'Geplant'
         }
         return displays.get(self.status, 'Unbekannt')
+    
+    def generate_share_token(self):
+        """Generate a unique share token for this post"""
+        if not self.share_token:
+            # Generate a 32-character random token
+            self.share_token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
+        return self.share_token
+    
+    def enable_sharing(self):
+        """Enable sharing for this post"""
+        if not self.share_token:
+            self.generate_share_token()
+        self.is_shared = True
+        from app import db
+        db.session.commit()
+    
+    def disable_sharing(self):
+        """Disable sharing for this post"""
+        self.is_shared = False
+        from app import db
+        db.session.commit()
+    
+    @property
+    def share_url(self):
+        """Get the public share URL for this post"""
+        if self.is_shared and self.share_token:
+            from flask import url_for
+            return url_for('posts.public_view', token=self.share_token, _external=True)
+        return None
     
     def __repr__(self):
         return f'<Post {self.title}>'

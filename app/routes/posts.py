@@ -147,6 +147,33 @@ def get_post_content(id):
     post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
     return jsonify({'content': post.content})
 
+@posts_bp.route('/<int:id>/share', methods=['POST'])
+@login_required
+def toggle_share(id):
+    post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
+    
+    if post.is_shared:
+        post.disable_sharing()
+        return jsonify({
+            'success': True,
+            'is_shared': False,
+            'message': 'Post-Freigabe deaktiviert'
+        })
+    else:
+        post.enable_sharing()
+        return jsonify({
+            'success': True,
+            'is_shared': True,
+            'share_url': post.share_url,
+            'message': 'Post für Review freigegeben'
+        })
+
+@posts_bp.route('/shared/<token>')
+def public_view(token):
+    """Public view for shared posts - no login required"""
+    post = Post.query.filter_by(share_token=token, is_shared=True).first_or_404()
+    return render_template('posts/public_view.html', post=post)
+
 @posts_bp.route('/<int:id>/images')
 @login_required
 def get_post_images(id):
