@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Token-Verwaltung - PostForge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Token-Verwaltung</h1>
+    <p class="text-gray-600 mt-2">Erstellen und verwalten Sie Registrierungs-Tokens</p>
+</div>
+
+<!-- Navigation -->
+<div class="mb-8">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('admin.index') }}" class="btn-secondary">Dashboard</a>
+        <a href="{{ url_for('admin.tokens') }}" class="btn-primary">Tokens verwalten</a>
+        <a href="{{ url_for('admin.users') }}" class="btn-secondary">Benutzer verwalten</a>
+    </div>
+</div>
+
+<!-- Create Token Form -->
+<div class="card mb-8">
+    <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Neuen Token erstellen</h2>
+        
+        <form method="POST" action="{{ url_for('admin.create_token') }}" class="space-y-4">
+            {{ form.hidden_tag() }}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    {{ form.expires_in_days.label(class="form-label") }}
+                    {{ form.expires_in_days(class="form-input", placeholder="Leer = nie ablaufen") }}
+                    <p class="text-sm text-gray-500 mt-1">Leer lassen für unbegrenzte Gültigkeit</p>
+                    {% if form.expires_in_days.errors %}
+                        <ul class="text-sm text-red-600 mt-1">
+                            {% for error in form.expires_in_days.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {{ form.note.label(class="form-label") }}
+                    {{ form.note(class="form-input", placeholder="Für wen ist dieser Token?") }}
+                    {% if form.note.errors %}
+                        <ul class="text-sm text-red-600 mt-1">
+                            {% for error in form.note.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                {{ form.submit(class="btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tokens List -->
+<div class="card">
+    <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Alle Tokens</h2>
+        
+        {% if tokens.items %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-2 px-4">Token</th>
+                        <th class="text-left py-2 px-4">Status</th>
+                        <th class="text-left py-2 px-4">Erstellt</th>
+                        <th class="text-left py-2 px-4">Verfällt</th>
+                        <th class="text-left py-2 px-4">Verwendet</th>
+                        <th class="text-left py-2 px-4">Notiz</th>
+                        <th class="text-left py-2 px-4">Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for token in tokens.items %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-2 px-4">
+                            <code class="text-sm bg-gray-100 px-2 py-1 rounded font-mono">
+                                {{ token.token }}
+                            </code>
+                        </td>
+                        <td class="py-2 px-4">
+                            {% if token.used_at %}
+                                <span class="status-badge bg-gray-100 text-gray-800">Verwendet</span>
+                            {% elif token.is_expired %}
+                                <span class="status-badge bg-red-100 text-red-800">Abgelaufen</span>
+                            {% elif token.is_active %}
+                                <span class="status-badge bg-green-100 text-green-800">Aktiv</span>
+                            {% else %}
+                                <span class="status-badge bg-red-100 text-red-800">Deaktiviert</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            {{ token.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            {% if token.expires_at %}
+                                {{ token.expires_at.strftime('%d.%m.%Y %H:%M') }}
+                            {% else %}
+                                <span class="text-gray-400">Nie</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            {% if token.used_at %}
+                                {{ token.used_at.strftime('%d.%m.%Y %H:%M') }}
+                                {% if token.user %}
+                                    <br><span class="text-xs text-gray-500">von {{ token.user.username }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-gray-400">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-2 px-4 text-sm text-gray-600">
+                            {{ token.note or '-' }}
+                        </td>
+                        <td class="py-2 px-4">
+                            {% if token.is_active and not token.used_at %}
+                            <form method="POST" action="{{ url_for('admin.deactivate_token', token_id=token.id) }}" class="inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm"
+                                        onclick="return confirm('Token wirklich deaktivieren?')">
+                                    Deaktivieren
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if tokens.pages > 1 %}
+        <div class="mt-6 flex justify-center">
+            <div class="flex space-x-2">
+                {% if tokens.has_prev %}
+                    <a href="{{ url_for('admin.tokens', page=tokens.prev_num) }}" class="btn-secondary">Zurück</a>
+                {% endif %}
+                
+                <span class="px-3 py-2 text-sm text-gray-600">
+                    Seite {{ tokens.page }} von {{ tokens.pages }}
+                </span>
+                
+                {% if tokens.has_next %}
+                    <a href="{{ url_for('admin.tokens', page=tokens.next_num) }}" class="btn-secondary">Weiter</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <p class="text-gray-500">Keine Tokens vorhanden.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -15,6 +15,12 @@
                 {{ form.hidden_tag() }}
                 
                 <div class="mb-4">
+                    {{ form.registration_token.label(class="form-label") }}
+                    {{ form.registration_token(class="form-input", placeholder="Registrierungs-Token eingeben") }}
+                    <p class="text-sm text-gray-500 mt-1">Sie benötigen einen gültigen Token vom Administrator.</p>
+                </div>
+                
+                <div class="mb-4">
                     {{ form.username.label(class="form-label") }}
                     {{ form.username(class="form-input") }}
                 </div>

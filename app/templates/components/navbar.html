@@ -22,6 +22,12 @@
                         PDF Import
                     </a>
                     
+                    {% if current_user.username == 'admin' %}
+                    <a href="{{ url_for('admin.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        Admin
+                    </a>
+                    {% endif %}
+                    
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                             <span>{{ current_user.username }}</span>

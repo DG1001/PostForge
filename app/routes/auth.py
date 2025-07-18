@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models.user import User
+from app.models.registration_token import RegistrationToken
 from app.forms.auth import LoginForm, RegisterForm
 from app.utils.helpers import flash_errors
 
@@ -35,6 +36,12 @@ def register():
     
     form = RegisterForm()
     if form.validate_on_submit():
+        # Get and validate the registration token
+        token = RegistrationToken.query.filter_by(token=form.registration_token.data).first()
+        if not token or not token.is_valid:
+            flash('Ungültiger oder abgelaufener Registrierungs-Token.', 'error')
+            return render_template('auth/register.html', form=form)
+        
         user = User(
             username=form.username.data,
             email=form.email.data
@@ -44,6 +51,10 @@ def register():
         try:
             db.session.add(user)
             db.session.commit()
+            
+            # Mark token as used
+            token.use_token(user.id)
+            
             flash('Registrierung erfolgreich! Sie können sich jetzt anmelden.', 'success')
             return redirect(url_for('auth.login'))
         except Exception as e:
