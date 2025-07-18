@@ -20,8 +20,22 @@ def make_shell_context():
 
 if __name__ == '__main__':
     with app.app_context():
-        # Create database tables
-        db.create_all()
+        # Run database migrations
+        from app.utils.database_migrations import run_migrations, verify_database_schema
+        
+        print("🚀 Starting PostForge application...")
+        
+        # Run automatic database migrations
+        if run_migrations():
+            print("✅ Database migrations completed successfully")
+        else:
+            print("❌ Database migrations failed")
+            exit(1)
+            
+        # Verify database schema
+        if not verify_database_schema():
+            print("❌ Database schema verification failed")
+            exit(1)
         
         # Create a default user if none exists
         if not User.query.first():
@@ -42,5 +56,7 @@ if __name__ == '__main__':
             db.session.add(default_user)
             db.session.commit()
             print("✅ Default admin user created: admin / (password shown above)")
+            
+        print("🎉 PostForge application started successfully!")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
