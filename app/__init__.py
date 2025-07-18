@@ -38,6 +38,10 @@ def create_app(config_name='default'):
     os.makedirs(app.config['PDF_UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['IMAGE_UPLOAD_FOLDER'], exist_ok=True)
     
+    # Import models to ensure they're registered with SQLAlchemy
+    from app.models import User, Post, Image, RegistrationToken
+    
+    
     # Register blueprints
     from app.routes import register_blueprints
     register_blueprints(app)
