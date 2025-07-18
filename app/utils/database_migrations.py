@@ -73,25 +73,68 @@ def run_migrations():
             print("📁 Database is in current directory")
         
         # Create all tables first
-        db.create_all()
-        print("✅ Database tables created/verified")
+        try:
+            db.create_all()
+            print("✅ Database tables created/verified")
+        except Exception as e:
+            print(f"❌ Error creating database tables: {e}")
+            # Try direct sqlite3 creation if SQLAlchemy fails
+            print("🔄 Attempting direct sqlite3 database initialization...")
+            try:
+                import sqlite3
+                conn = sqlite3.connect(db_path)
+                conn.execute("CREATE TABLE IF NOT EXISTS _init (id INTEGER)")
+                conn.commit()
+                conn.close()
+                print("✅ Database initialized via direct sqlite3")
+                # Try SQLAlchemy again
+                db.create_all()
+                print("✅ Database tables created after initialization")
+            except Exception as e2:
+                print(f"❌ Direct sqlite3 initialization failed: {e2}")
+                return False
         
         # Verify database file exists after creation
         if not os.path.exists(db_path):
             print(f"❌ Database file not found after creation: {db_path}")
-            print("🔄 Attempting to create database file with initial query...")
-            # Try to create the file by executing a simple query
+            print("🔄 Attempting to create database file with table creation...")
+            # Force database creation by creating a table and inserting data
             try:
                 with db.engine.connect() as connection:
-                    result = connection.execute(db.text("SELECT 1"))
-                    result.fetchone()
+                    # Create a temporary table to force file creation
+                    connection.execute(db.text("CREATE TABLE IF NOT EXISTS _migration_test (id INTEGER PRIMARY KEY)"))
+                    connection.execute(db.text("INSERT OR IGNORE INTO _migration_test (id) VALUES (1)"))
+                    connection.execute(db.text("SELECT * FROM _migration_test"))
+                    connection.commit()
                 
                 # Verify the file was created
                 if os.path.exists(db_path):
-                    print("✅ Database file created via query")
+                    print("✅ Database file created via table creation")
+                    # Clean up the test table
+                    try:
+                        with db.engine.connect() as connection:
+                            connection.execute(db.text("DROP TABLE _migration_test"))
+                            connection.commit()
+                    except:
+                        pass
                 else:
-                    print("❌ Database file still not found after query")
-                    return False
+                    print("❌ Database file still not found after table creation")
+                    # Try using sqlite3 directly as last resort
+                    print("🔄 Attempting direct sqlite3 database creation...")
+                    try:
+                        import sqlite3
+                        conn = sqlite3.connect(db_path)
+                        conn.execute("CREATE TABLE IF NOT EXISTS _test (id INTEGER)")
+                        conn.commit()
+                        conn.close()
+                        if os.path.exists(db_path):
+                            print("✅ Database file created via direct sqlite3")
+                        else:
+                            print("❌ Failed to create database file with all methods")
+                            return False
+                    except Exception as e:
+                        print(f"❌ Direct sqlite3 creation failed: {e}")
+                        return False
             except Exception as e:
                 print(f"❌ Failed to create database file: {e}")
                 return False
