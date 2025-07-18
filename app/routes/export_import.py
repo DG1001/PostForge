@@ -66,7 +66,7 @@ def export_posts():
                     post_data['images'].append(image_data)
                     
                     # Add image file to ZIP
-                    image_path = os.path.join('static/uploads/images', image.filename)
+                    image_path = os.path.join('app/static/uploads/images', image.filename)
                     if os.path.exists(image_path):
                         zipf.write(image_path, f'images/{image.filename}')
                 
@@ -167,7 +167,7 @@ def import_posts():
                 if os.path.exists(source_path):
                     # Create new filename to avoid conflicts
                     new_filename = f"imported_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{image_data['filename']}"
-                    target_path = os.path.join('static/uploads/images', new_filename)
+                    target_path = os.path.join('app/static/uploads/images', new_filename)
                     
                     # Copy image file
                     shutil.copy2(source_path, target_path)
