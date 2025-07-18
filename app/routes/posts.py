@@ -141,6 +141,12 @@ def preview(id):
     post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
     return render_template('posts/preview.html', post=post)
 
+@posts_bp.route('/<int:id>/content')
+@login_required
+def get_post_content(id):
+    post = Post.query.filter_by(id=id, user_id=current_user.id).first_or_404()
+    return jsonify({'content': post.content})
+
 @posts_bp.route('/<int:id>/images')
 @login_required
 def get_post_images(id):

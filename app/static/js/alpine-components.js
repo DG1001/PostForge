@@ -218,6 +218,23 @@ window.copyToClipboard = function(text) {
 };
 
 window.copyPostForLinkedIn = function(postId, text, imageCount) {
+    // If text is null, fetch it from the server
+    if (!text) {
+        fetch(`/posts/${postId}/content`)
+            .then(response => response.json())
+            .then(data => {
+                copyTextToClipboard(data.content, postId, imageCount);
+            })
+            .catch(error => {
+                console.error('Error fetching post content:', error);
+            });
+        return;
+    }
+    
+    copyTextToClipboard(text, postId, imageCount);
+};
+
+function copyTextToClipboard(text, postId, imageCount) {
     // Copy text to clipboard
     navigator.clipboard.writeText(text).then(function() {
         // Show success notification
