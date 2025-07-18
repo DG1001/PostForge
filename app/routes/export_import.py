@@ -60,7 +60,9 @@ def export_posts():
                     image_data = {
                         'filename': image.filename,
                         'original_filename': getattr(image, 'original_filename', image.filename),
+                        'file_path': getattr(image, 'file_path', ''),
                         'file_size': getattr(image, 'file_size', 0),
+                        'mime_type': getattr(image, 'mime_type', 'image/jpeg'),
                         'uploaded_at': image.uploaded_at.isoformat()
                     }
                     post_data['images'].append(image_data)
@@ -172,10 +174,28 @@ def import_posts():
                     # Copy image file
                     shutil.copy2(source_path, target_path)
                     
+                    # Get file info
+                    file_size = os.path.getsize(target_path)
+                    
+                    # Determine MIME type based on extension
+                    if new_filename.lower().endswith(('.jpg', '.jpeg')):
+                        mime_type = 'image/jpeg'
+                    elif new_filename.lower().endswith('.png'):
+                        mime_type = 'image/png'
+                    elif new_filename.lower().endswith('.gif'):
+                        mime_type = 'image/gif'
+                    elif new_filename.lower().endswith('.webp'):
+                        mime_type = 'image/webp'
+                    else:
+                        mime_type = 'image/jpeg'  # Default
+                    
                     # Create image record
                     new_image = Image(
                         filename=new_filename,
                         original_filename=image_data.get('original_filename', image_data['filename']),
+                        file_path=target_path,
+                        file_size=file_size,
+                        mime_type=mime_type,
                         post_id=new_post.id
                     )
                     db.session.add(new_image)
