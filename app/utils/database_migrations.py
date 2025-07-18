@@ -58,65 +58,134 @@ def run_migrations():
         if not os.path.isabs(db_path):
             db_path = os.path.join(os.getcwd(), db_path)
             
-        # Create database file if it doesn't exist
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        print(f"📁 Database path: {db_path}")
+        print(f"📁 Current working directory: {os.getcwd()}")
+        print(f"📁 Database path is absolute: {os.path.isabs(db_path)}")
+        
+        # Create database directory if it doesn't exist
+        db_dir = os.path.dirname(db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
+            print(f"📁 Database directory created/verified: {db_dir}")
+            print(f"📁 Directory exists: {os.path.exists(db_dir)}")
+            print(f"📁 Directory is writable: {os.access(db_dir, os.W_OK)}")
+        else:
+            print("📁 Database is in current directory")
         
         # Create all tables first
         db.create_all()
         print("✅ Database tables created/verified")
         
-        # Check if database file exists
+        # Verify database file exists after creation
         if not os.path.exists(db_path):
-            print("❌ Database file not found after creation")
-            return False
-            
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
+            print(f"❌ Database file not found after creation: {db_path}")
+            print("🔄 Attempting to create database file with initial query...")
+            # Try to create the file by executing a simple query
+            try:
+                with db.engine.connect() as connection:
+                    result = connection.execute(db.text("SELECT 1"))
+                    result.fetchone()
+                
+                # Verify the file was created
+                if os.path.exists(db_path):
+                    print("✅ Database file created via query")
+                else:
+                    print("❌ Database file still not found after query")
+                    return False
+            except Exception as e:
+                print(f"❌ Failed to create database file: {e}")
+                return False
+        else:
+            print(f"✅ Database file exists: {db_path}")
         
+        # Verify database connection
+        try:
+            with db.engine.connect() as connection:
+                result = connection.execute(db.text("SELECT 1"))
+                result.fetchone()
+            print("✅ Database connection verified")
+        except Exception as e:
+            print(f"❌ Database connection failed: {e}")
+            return False
+        
+        # Use SQLAlchemy for migrations to avoid path issues
         migrations_applied = 0
         
-        # Migration 1: Add share_token and is_shared columns to posts table
-        if not check_column_exists('posts', 'share_token'):
-            print("🔄 Adding share_token column to posts table...")
-            cursor.execute('ALTER TABLE posts ADD COLUMN share_token VARCHAR(64)')
-            migrations_applied += 1
-            print("✅ Added share_token column")
-        
-        if not check_column_exists('posts', 'is_shared'):
-            print("🔄 Adding is_shared column to posts table...")
-            cursor.execute('ALTER TABLE posts ADD COLUMN is_shared BOOLEAN DEFAULT 0')
-            migrations_applied += 1
-            print("✅ Added is_shared column")
-        
-        # Create unique index for share_token if it doesn't exist
+        # Check and add columns using SQLAlchemy
         try:
-            cursor.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_posts_share_token ON posts(share_token)')
-            print("✅ Created/verified unique index for share_token")
-        except sqlite3.OperationalError as e:
-            if 'already exists' not in str(e):
-                print(f"⚠️  Warning: Could not create index: {e}")
-        
-        # Migration 2: Check if images table has required columns
-        if not check_column_exists('images', 'file_path'):
-            print("🔄 Adding file_path column to images table...")
-            cursor.execute('ALTER TABLE images ADD COLUMN file_path VARCHAR(500)')
-            migrations_applied += 1
-            print("✅ Added file_path column")
-            
-        if not check_column_exists('images', 'file_size'):
-            print("🔄 Adding file_size column to images table...")
-            cursor.execute('ALTER TABLE images ADD COLUMN file_size INTEGER')
-            migrations_applied += 1
-            print("✅ Added file_size column")
-            
-        if not check_column_exists('images', 'mime_type'):
-            print("🔄 Adding mime_type column to images table...")
-            cursor.execute('ALTER TABLE images ADD COLUMN mime_type VARCHAR(100)')
-            migrations_applied += 1
-            print("✅ Added mime_type column")
-        
-        conn.commit()
-        conn.close()
+            # Check if columns exist by attempting to query them
+            with db.engine.connect() as connection:
+                # Start a transaction for all migrations
+                trans = connection.begin()
+                
+                try:
+                    # Check posts table columns
+                    try:
+                        connection.execute(db.text("SELECT share_token FROM posts LIMIT 1"))
+                        print("✅ share_token column already exists")
+                    except Exception:
+                        print("🔄 Adding share_token column to posts table...")
+                        connection.execute(db.text("ALTER TABLE posts ADD COLUMN share_token VARCHAR(64)"))
+                        migrations_applied += 1
+                        print("✅ Added share_token column")
+                    
+                    try:
+                        connection.execute(db.text("SELECT is_shared FROM posts LIMIT 1"))
+                        print("✅ is_shared column already exists")
+                    except Exception:
+                        print("🔄 Adding is_shared column to posts table...")
+                        connection.execute(db.text("ALTER TABLE posts ADD COLUMN is_shared BOOLEAN DEFAULT 0"))
+                        migrations_applied += 1
+                        print("✅ Added is_shared column")
+                    
+                    # Create unique index for share_token
+                    try:
+                        connection.execute(db.text("CREATE UNIQUE INDEX IF NOT EXISTS idx_posts_share_token ON posts(share_token)"))
+                        print("✅ Created/verified unique index for share_token")
+                    except Exception as e:
+                        if 'already exists' not in str(e):
+                            print(f"⚠️  Warning: Could not create index: {e}")
+                    
+                    # Check images table columns
+                    try:
+                        connection.execute(db.text("SELECT file_path FROM images LIMIT 1"))
+                        print("✅ file_path column already exists")
+                    except Exception:
+                        print("🔄 Adding file_path column to images table...")
+                        connection.execute(db.text("ALTER TABLE images ADD COLUMN file_path VARCHAR(500)"))
+                        migrations_applied += 1
+                        print("✅ Added file_path column")
+                    
+                    try:
+                        connection.execute(db.text("SELECT file_size FROM images LIMIT 1"))
+                        print("✅ file_size column already exists")
+                    except Exception:
+                        print("🔄 Adding file_size column to images table...")
+                        connection.execute(db.text("ALTER TABLE images ADD COLUMN file_size INTEGER"))
+                        migrations_applied += 1
+                        print("✅ Added file_size column")
+                    
+                    try:
+                        connection.execute(db.text("SELECT mime_type FROM images LIMIT 1"))
+                        print("✅ mime_type column already exists")
+                    except Exception:
+                        print("🔄 Adding mime_type column to images table...")
+                        connection.execute(db.text("ALTER TABLE images ADD COLUMN mime_type VARCHAR(100)"))
+                        migrations_applied += 1
+                        print("✅ Added mime_type column")
+                    
+                    # Commit all migrations
+                    trans.commit()
+                    print("✅ All migrations committed successfully")
+                    
+                except Exception as e:
+                    trans.rollback()
+                    print(f"❌ Error during migrations, rolling back: {e}")
+                    return False
+                    
+        except Exception as e:
+            print(f"❌ Error during migrations: {e}")
+            return False
         
         if migrations_applied > 0:
             print(f"✅ Applied {migrations_applied} database migrations successfully")
@@ -127,11 +196,6 @@ def run_migrations():
         
     except Exception as e:
         print(f"❌ Error running migrations: {e}")
-        try:
-            conn.rollback()
-            conn.close()
-        except:
-            pass
         return False
 
 
