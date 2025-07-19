@@ -84,7 +84,7 @@ msgstr "PDF Import"
 
 #: app/templates/main/landing.html:102
 msgid "Import posts from LinkedIn PDF exports with intelligent text recognition"
-msgstr ""
+msgstr "Posts aus LinkedIn PDF-Exporten mit intelligenter Texterkennung importieren"
 
 #: app/templates/main/landing.html:112
 msgid "Export & Import"
@@ -92,7 +92,7 @@ msgstr "Export & Import"
 
 #: app/templates/main/landing.html:113
 msgid "Complete backup and transfer of your posts between different instances"
-msgstr ""
+msgstr "Vollständige Sicherung und Übertragung Ihrer Posts zwischen verschiedenen Instanzen"
 
 #: app/templates/main/landing.html:123
 msgid "Post Review"
@@ -100,161 +100,161 @@ msgstr "Post Review"
 
 #: app/templates/main/landing.html:124
 msgid "Share posts for review with colleagues via secure links without login"
-msgstr ""
+msgstr "Posts über sichere Links ohne Anmeldung mit Kollegen zur Review teilen"
 
 #: app/templates/main/landing.html:134 app/templates/main/landing.html:313
 msgid "Team Management"
-msgstr ""
+msgstr "Team-Management"
 
 #: app/templates/main/landing.html:135
 msgid "Manage teams with registration tokens and user permissions"
-msgstr ""
+msgstr "Teams mit Registrierungstoken und Benutzerberechtigungen verwalten"
 
 #: app/templates/main/landing.html:145
 msgid "Simple, Transparent Pricing"
-msgstr ""
+msgstr "Einfache, transparente Preise"
 
 #: app/templates/main/landing.html:146
 msgid "Choose the plan that perfectly fits your needs"
-msgstr ""
+msgstr "Wählen Sie den Plan, der perfekt zu Ihren Bedürfnissen passt"
 
 #: app/templates/main/landing.html:154
 msgid "Self-hosting for developers"
-msgstr ""
+msgstr "Self-Hosting für Entwickler"
 
 #: app/templates/main/landing.html:156
 msgid "forever"
-msgstr ""
+msgstr "für immer"
 
 #: app/templates/main/landing.html:164 app/templates/main/landing.html:220
 msgid "Unlimited posts"
-msgstr ""
+msgstr "Unbegrenzte Posts"
 
 #: app/templates/main/landing.html:170 app/templates/main/landing.html:226
 msgid "Image management"
-msgstr ""
+msgstr "Bild-Management"
 
 #: app/templates/main/landing.html:176 app/templates/main/landing.html:232
 msgid "PDF import"
-msgstr ""
+msgstr "PDF Import"
 
 #: app/templates/main/landing.html:182 app/templates/main/landing.html:238
 msgid "Export & import"
-msgstr ""
+msgstr "Export & Import"
 
 #: app/templates/main/landing.html:188 app/templates/main/landing.html:244
 msgid "Post review & sharing"
-msgstr ""
+msgstr "Post Review & Sharing"
 
 #: app/templates/main/landing.html:194
 msgid "Own infrastructure"
-msgstr ""
+msgstr "Eigene Infrastruktur"
 
 #: app/templates/main/landing.html:199
 msgid "View on GitHub"
-msgstr ""
+msgstr "Auf GitHub ansehen"
 
 #: app/templates/main/landing.html:202
 msgid "Open Source Self-hosting"
-msgstr ""
+msgstr "Open Source Self-Hosting"
 
 #: app/templates/main/landing.html:210
 msgid "For individuals and small teams"
-msgstr ""
+msgstr "Für Einzelpersonen und kleine Teams"
 
 #: app/templates/main/landing.html:212 app/templates/main/landing.html:269
 msgid "per month"
-msgstr ""
+msgstr "pro Monat"
 
 #: app/templates/main/landing.html:250
 msgid "Email support"
-msgstr ""
+msgstr "E-Mail Support"
 
 #: app/templates/main/landing.html:255 app/templates/main/landing.html:324
 msgid "Get started"
-msgstr ""
+msgstr "Jetzt starten"
 
 #: app/templates/main/landing.html:262
 msgid "Recommended"
-msgstr ""
+msgstr "Empfohlen"
 
 #: app/templates/main/landing.html:267
 msgid "For professional content creators"
-msgstr ""
+msgstr "Für professionelle Content-Ersteller"
 
 #: app/templates/main/landing.html:277
 msgid "All Basic features"
-msgstr ""
+msgstr "Alle Basic Features"
 
 #: app/templates/main/landing.html:283
 msgid "AI Content Generation"
-msgstr ""
+msgstr "KI Content-Generierung"
 
 #: app/templates/main/landing.html:289
 msgid "Auto hashtag generation"
-msgstr ""
+msgstr "Auto-Hashtag-Generierung"
 
 #: app/templates/main/landing.html:295
 msgid "Content optimization"
-msgstr ""
+msgstr "Content-Optimierung"
 
 #: app/templates/main/landing.html:301
 msgid "Automatic translation"
-msgstr ""
+msgstr "Automatische Übersetzung"
 
 #: app/templates/main/landing.html:307
 msgid "Engagement analysis"
-msgstr ""
+msgstr "Engagement-Analyse"
 
 #: app/templates/main/landing.html:319
 msgid "Priority Support"
-msgstr ""
+msgstr "Prioritäts-Support"
 
 #: app/templates/main/landing.html:329
 msgid "🚀 AI Features in Development"
-msgstr ""
+msgstr "🚀 KI-Features in der Entwicklung"
 
 #: app/templates/main/landing.html:337
 msgid "Have questions about our plans?"
-msgstr ""
+msgstr "Haben Sie Fragen zu unseren Plänen?"
 
 #: app/templates/main/landing.html:340
 msgid "Contact us: info@xares.com"
-msgstr ""
+msgstr "Kontaktieren Sie uns: info@xares.com"
 
 #: app/templates/main/landing.html:350
 msgid "Ready to Improve Your LinkedIn Strategy?"
-msgstr ""
+msgstr "Bereit, Ihre LinkedIn-Strategie zu verbessern?"
 
 #: app/templates/main/landing.html:353
 msgid ""
 "Start with PostForge today and experience how easy professional LinkedIn "
 "marketing can be."
-msgstr ""
+msgstr "Starten Sie noch heute mit PostForge und erfahren Sie, wie einfach professionelles LinkedIn-Marketing sein kann."
 
 #: app/templates/main/landing.html:357
 msgid "Contact us"
-msgstr ""
+msgstr "Kontaktieren Sie uns"
 
 #: app/templates/main/landing.html:372
 msgid ""
 "The professional LinkedIn Post Manager for content creators and "
 "businesses."
-msgstr ""
+msgstr "Der professionelle LinkedIn Post Manager für Content Creator und Unternehmen."
 
 #: app/templates/main/landing.html:376
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: app/templates/main/landing.html:384
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: app/templates/main/landing.html:393
 msgid "Imprint and Privacy"
-msgstr ""
+msgstr "Impressum und Datenschutz"
 
 #: app/templates/main/landing.html:399
 msgid "All rights reserved."
-msgstr ""
+msgstr "Alle Rechte vorbehalten."
 
