@@ -1,0 +1,260 @@
+# German translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-07-19 22:12+0200\n"
+"PO-Revision-Date: 2025-07-19 22:16+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/templates/main/landing.html:6 app/templates/main/landing_old.html:6
+msgid "PostForge - LinkedIn Post Manager"
+msgstr "PostForge - LinkedIn Post Manager"
+
+#: app/templates/main/landing.html:33 app/templates/main/landing.html:387
+#: app/templates/main/landing_old.html:33
+msgid "Login"
+msgstr "Anmelden"
+
+#: app/templates/main/landing.html:36 app/templates/main/landing.html:390
+#: app/templates/main/landing_old.html:36
+msgid "Register"
+msgstr "Registrieren"
+
+#: app/templates/main/landing.html:47 app/templates/main/landing_old.html:47
+msgid "Manage Your LinkedIn Posts Like a Pro"
+msgstr "Verwalten Sie Ihre LinkedIn Posts wie ein Profi"
+
+#: app/templates/main/landing.html:50 app/templates/main/landing_old.html:50
+msgid ""
+"PostForge is the ultimate LinkedIn Post Manager for content creators, "
+"social media managers, and businesses. Create, manage, and optimize your "
+"LinkedIn content with professional tools."
+msgstr ""
+"PostForge ist der ultimative LinkedIn Post Manager für Content Creator, "
+"Social Media Manager und Unternehmen. Erstellen, verwalten und optimieren "
+"Sie Ihre LinkedIn-Inhalte mit professionellen Tools."
+
+#: app/templates/main/landing.html:54 app/templates/main/landing_old.html:54
+msgid "Get Started"
+msgstr "Jetzt starten"
+
+#: app/templates/main/landing.html:57 app/templates/main/landing_old.html:57
+msgid "Learn More"
+msgstr "Mehr erfahren"
+
+#: app/templates/main/landing.html:67 app/templates/main/landing_old.html:67
+msgid "All Features at a Glance"
+msgstr "Alle Features im Überblick"
+
+#: app/templates/main/landing.html:68 app/templates/main/landing_old.html:68
+msgid "Professional LinkedIn post management with everything you need"
+msgstr "Professionelle LinkedIn Post-Verwaltung mit allem, was Sie brauchen"
+
+#: app/templates/main/landing.html:79 app/templates/main/landing_old.html:79
+msgid "Post Management"
+msgstr "Post Management"
+
+#: app/templates/main/landing.html:80 app/templates/main/landing_old.html:80
+msgid "Create, edit, and organize your LinkedIn posts with our intuitive editor"
+msgstr "Erstellen, bearbeiten und organisieren Sie Ihre LinkedIn Posts mit unserem intuitiven Editor"
+
+#: app/templates/main/landing.html:90
+msgid "Image Management"
+msgstr "Bild-Management"
+
+#: app/templates/main/landing.html:91
+msgid "Upload, manage, and optimize images for your LinkedIn posts"
+msgstr "Upload, Verwaltung und Optimierung von Bildern für Ihre LinkedIn Posts"
+
+#: app/templates/main/landing.html:101
+msgid "PDF Import"
+msgstr "PDF Import"
+
+#: app/templates/main/landing.html:102
+msgid "Import posts from LinkedIn PDF exports with intelligent text recognition"
+msgstr ""
+
+#: app/templates/main/landing.html:112
+msgid "Export & Import"
+msgstr "Export & Import"
+
+#: app/templates/main/landing.html:113
+msgid "Complete backup and transfer of your posts between different instances"
+msgstr ""
+
+#: app/templates/main/landing.html:123
+msgid "Post Review"
+msgstr "Post Review"
+
+#: app/templates/main/landing.html:124
+msgid "Share posts for review with colleagues via secure links without login"
+msgstr ""
+
+#: app/templates/main/landing.html:134 app/templates/main/landing.html:313
+msgid "Team Management"
+msgstr ""
+
+#: app/templates/main/landing.html:135
+msgid "Manage teams with registration tokens and user permissions"
+msgstr ""
+
+#: app/templates/main/landing.html:145
+msgid "Simple, Transparent Pricing"
+msgstr ""
+
+#: app/templates/main/landing.html:146
+msgid "Choose the plan that perfectly fits your needs"
+msgstr ""
+
+#: app/templates/main/landing.html:154
+msgid "Self-hosting for developers"
+msgstr ""
+
+#: app/templates/main/landing.html:156
+msgid "forever"
+msgstr ""
+
+#: app/templates/main/landing.html:164 app/templates/main/landing.html:220
+msgid "Unlimited posts"
+msgstr ""
+
+#: app/templates/main/landing.html:170 app/templates/main/landing.html:226
+msgid "Image management"
+msgstr ""
+
+#: app/templates/main/landing.html:176 app/templates/main/landing.html:232
+msgid "PDF import"
+msgstr ""
+
+#: app/templates/main/landing.html:182 app/templates/main/landing.html:238
+msgid "Export & import"
+msgstr ""
+
+#: app/templates/main/landing.html:188 app/templates/main/landing.html:244
+msgid "Post review & sharing"
+msgstr ""
+
+#: app/templates/main/landing.html:194
+msgid "Own infrastructure"
+msgstr ""
+
+#: app/templates/main/landing.html:199
+msgid "View on GitHub"
+msgstr ""
+
+#: app/templates/main/landing.html:202
+msgid "Open Source Self-hosting"
+msgstr ""
+
+#: app/templates/main/landing.html:210
+msgid "For individuals and small teams"
+msgstr ""
+
+#: app/templates/main/landing.html:212 app/templates/main/landing.html:269
+msgid "per month"
+msgstr ""
+
+#: app/templates/main/landing.html:250
+msgid "Email support"
+msgstr ""
+
+#: app/templates/main/landing.html:255 app/templates/main/landing.html:324
+msgid "Get started"
+msgstr ""
+
+#: app/templates/main/landing.html:262
+msgid "Recommended"
+msgstr ""
+
+#: app/templates/main/landing.html:267
+msgid "For professional content creators"
+msgstr ""
+
+#: app/templates/main/landing.html:277
+msgid "All Basic features"
+msgstr ""
+
+#: app/templates/main/landing.html:283
+msgid "AI Content Generation"
+msgstr ""
+
+#: app/templates/main/landing.html:289
+msgid "Auto hashtag generation"
+msgstr ""
+
+#: app/templates/main/landing.html:295
+msgid "Content optimization"
+msgstr ""
+
+#: app/templates/main/landing.html:301
+msgid "Automatic translation"
+msgstr ""
+
+#: app/templates/main/landing.html:307
+msgid "Engagement analysis"
+msgstr ""
+
+#: app/templates/main/landing.html:319
+msgid "Priority Support"
+msgstr ""
+
+#: app/templates/main/landing.html:329
+msgid "🚀 AI Features in Development"
+msgstr ""
+
+#: app/templates/main/landing.html:337
+msgid "Have questions about our plans?"
+msgstr ""
+
+#: app/templates/main/landing.html:340
+msgid "Contact us: info@xares.com"
+msgstr ""
+
+#: app/templates/main/landing.html:350
+msgid "Ready to Improve Your LinkedIn Strategy?"
+msgstr ""
+
+#: app/templates/main/landing.html:353
+msgid ""
+"Start with PostForge today and experience how easy professional LinkedIn "
+"marketing can be."
+msgstr ""
+
+#: app/templates/main/landing.html:357
+msgid "Contact us"
+msgstr ""
+
+#: app/templates/main/landing.html:372
+msgid ""
+"The professional LinkedIn Post Manager for content creators and "
+"businesses."
+msgstr ""
+
+#: app/templates/main/landing.html:376
+msgid "Contact"
+msgstr ""
+
+#: app/templates/main/landing.html:384
+msgid "Links"
+msgstr ""
+
+#: app/templates/main/landing.html:393
+msgid "Imprint and Privacy"
+msgstr ""
+
+#: app/templates/main/landing.html:399
+msgid "All rights reserved."
+msgstr ""
+
