@@ -59,6 +59,13 @@ A comprehensive LinkedIn post management application designed as a local web app
 - **User Overview** - View all registered users and their activity
 - **Access Control** - Restrict registration to invited users only
 
+### 🌐 Internationalization
+- **Multi-Language Support** - English (default) and German localization
+- **Smart Language Detection** - Browser language, URL params, session persistence
+- **Professional i18n** - Flask-Babel with gettext standard
+- **Easy Translation Management** - Translatable strings in .po files
+- **Language Toggle** - Switch languages with `?lang=de` URL parameter
+
 ## Tech Stack
 
 ### Backend
@@ -74,6 +81,7 @@ A comprehensive LinkedIn post management application designed as a local web app
 - **TailwindCSS 3.x** - Utility-first CSS framework
 - **Alpine.js 3.x** - Lightweight JavaScript framework
 - **HTMX 1.9** - Modern web interactions
+- **Flask-Babel** - Professional internationalization (i18n)
 
 ### Database
 - **SQLite** - Development database
@@ -232,6 +240,11 @@ npm run build-css
 
 # CSS production build
 npm run build-css-prod
+
+# Internationalization commands
+pybabel extract -F babel.cfg -k _ -o messages.pot .  # Extract translatable strings
+pybabel update -i messages.pot -d app/translations   # Update translations  
+pybabel compile -d app/translations                  # Compile translations
 ```
 
 ### Configuration
