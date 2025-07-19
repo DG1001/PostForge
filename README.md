@@ -308,7 +308,7 @@ docker run -d \
   --name postforge \
   -p 5000:5000 \
   -v postforge_data:/app/instance \
-  -v postforge_uploads:/app/static/uploads \
+  -v postforge_uploads:/app/app/static/uploads \
   ghcr.io/dg1001/postforge:latest
 ```
 
@@ -318,7 +318,7 @@ Access the application at `http://localhost:5000`
 - `-d` - Run in detached mode
 - `-p 5000:5000` - Map port 5000 to host
 - `-v postforge_data:/app/instance` - Persist database
-- `-v postforge_uploads:/app/static/uploads` - Persist uploaded files
+- `-v postforge_uploads:/app/app/static/uploads` - Persist uploaded files
 
 **Environment Variables:**
 ```bash
@@ -329,7 +329,7 @@ docker run -d \
   -e ADMIN_PASSWORD="your-admin-password" \
   -e FLASK_ENV="production" \
   -v postforge_data:/app/instance \
-  -v postforge_uploads:/app/static/uploads \
+  -v postforge_uploads:/app/app/static/uploads \
   ghcr.io/dg1001/postforge:latest
 ```
 
@@ -358,7 +358,7 @@ services:
       - FLASK_ENV=production
     volumes:
       - postforge_data:/app/instance
-      - postforge_uploads:/app/static/uploads
+      - postforge_uploads:/app/app/static/uploads
     restart: unless-stopped
 
 volumes:
