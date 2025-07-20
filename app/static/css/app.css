@@ -942,7 +942,7 @@ select {
 }
 
 .card {
-  overflow: hidden;
+  overflow: visible;
   border-radius: 0.5rem;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
@@ -1114,6 +1114,14 @@ select {
 
 .-top-3 {
   top: -0.75rem;
+}
+
+.-top-6 {
+  top: -1.5rem;
+}
+
+.-top-1 {
+  top: -0.25rem;
 }
 
 .z-50 {
