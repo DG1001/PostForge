@@ -219,8 +219,8 @@ msgid "Have questions about our plans?"
 msgstr "Haben Sie Fragen zu unseren Plänen?"
 
 #: app/templates/main/landing.html:340
-msgid "Contact us: info@xares.com"
-msgstr "Kontaktieren Sie uns: info@xares.com"
+msgid "Contact us: postforge@sensem.de"
+msgstr "Kontaktieren Sie uns: postforge@sensem.de"
 
 #: app/templates/main/landing.html:350
 msgid "Ready to Improve Your LinkedIn Strategy?"
